@@ -9,37 +9,115 @@ public class Control {
 
     public static HashMap<String, String> vars = new HashMap<>();
     private List<String> operators = Arrays.asList(new String[]{"+", "-", "*", "/"});
-    private List<String> instructions = Arrays.asList(new String[]{"defun", "setq", "if"});
     OpAritmeticas operations = new OpAritmeticas();
 
     /**
      * Esta es la funcion mas importante del programa.
      * Recibe como parametro un String, el cual analiza a profundidad para encontrar las claves.
      * Con ellas, redirige el codigo a donde debe para llegar a una conclusion. Es importante
-     * mencionar que este metodo solo se correra una vez ya que, las proximas veces que se
-     * solicita este mismo metodo, se recibe como parametro una Lista, por lo que debe haber
-     * un Override del mismo.
+     * mencionar que este metodo solo se correra una vez.
      * */
-    public void Process(String expression) {
 
-        String ans = "";
 
-        String[] splitedExpression = expression.split("");
+    public boolean Process(String expression) {
+
+        boolean ans = true;
+        String ArithmeticAnswer = "";
+
+        String[] splitedExpression = expression.split("\\(|\\)");
+
         boolean foundArithmetic = false;
-        for(int i = 0; i < 4 ; i++){
-            if(operators.contains(splitedExpression[i])){
+        boolean foundFunciton = false;
+        boolean foundVar = false;
+
+        for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
+            if(operators.contains(clean(splitedExpression[i]))){
                 foundArithmetic = true;
             }
         }
 
-        if(foundArithmetic){
-            ans = String.valueOf(operations.Process(expression));
+        for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
+
+            if((clean(splitedExpression[i])).equals("defun")){
+                foundFunciton = true;
+            }
         }
 
-        System.out.println(ans);
+        for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
+            if((clean(splitedExpression[i])).equals("setq")){
+                foundVar = true;
+            }
+        }
+
+
+        if(foundArithmetic){ArithmeticAnswer = String.valueOf(operations.Process(expression));}
+
+        if(foundFunciton && FunctionCounting(expression)){
+
+
+
+        }
+
+        if(foundFunciton && !FunctionCounting(expression)){
+            ans = false;
+        }
+
+
+        if(foundVar){System.out.println("VARIABLE");}
+
+
+
+        System.out.println(ArithmeticAnswer);
+
+        return ans;
 
     }
 
+    private String clean(String value){
+        String ans = "";
+
+        String[] splitedValue = value.split(" ");
+        boolean found = false;
+
+        for (int i= 0; i< splitedValue.length; i++){
+            String[] doubleSplitedValue = value.split("");
+            for(int ii= 0; ii < doubleSplitedValue.length; ii++){
+                if(splitedValue[i].equals(" ")){
+                    splitedValue[i] = "";
+                }
+                if(operators.contains(splitedValue[i])){
+                    ans = "+";
+                    found= true;
+                }
+            }
+
+            if(!found){
+                ans = splitedValue[0];
+            }
+
+        }
+        return ans;
+
+    }
+
+    private boolean FunctionCounting(String expression){
+
+        boolean ans = true;
+
+        String[] splitedExpression = expression.split("");
+
+        int CountParenthesis = 0;
+
+        for(int i = 0; i<expression.length();i++){
+            if (expression.charAt(i) == '('){CountParenthesis++;}
+            if (expression.charAt(i) == ')'){CountParenthesis--;}
+        }
+
+        if (CountParenthesis > 0) ans = false;
+
+        return ans;
+
+    }
 
     public static HashMap<String, String> getVars(){
         return  vars;

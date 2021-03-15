@@ -14,15 +14,9 @@ public class OpAritmeticas {
 
         int ans = 0;
 
-        String[] temp = expression.split("\\(|\\)");
-
-        String respaldo = expression;
-
         int CountBeforeFirstParenthesis = -1;
         int CountAfterLastParenthesis = -1;
         int FirstIndex = -1;
-        int FinalIndex = 0;
-        int emptySpaces = 0;
         int ParenthesisCount = 0;
         int ClosedExpression = 0;
 
@@ -33,7 +27,6 @@ public class OpAritmeticas {
                 expression = expression.substring(1);
             }
             if(expression.charAt(i) == '('){
-                found = true;
                 break;
             }
             if(expression.charAt(i) != '(' && expression.charAt(i) != ' '){
@@ -73,13 +66,6 @@ public class OpAritmeticas {
             localIndex++;
         }
 
-        if(FirstIndex != -1){
-            for(String blcks : expression.substring(FirstIndex,localIndex).split("\\(|\\)")){
-                if(blcks.equals("") || blcks.equals(" ")){
-                    emptySpaces++;
-                }
-            }
-        }
 
         String left = "";
         String right = "";
@@ -110,7 +96,6 @@ public class OpAritmeticas {
                     String[] SplitedExpression = expression.split(" ");
                     ans = Calculate(SplitedExpression[0],SplitedExpression[1],SplitedExpression[2]);
                 } else {
-                    String fullExpression = expression;
                     String[] SplitedExpression = expression.split(" ");
                     for(String s: SplitedExpression){
                         try {
