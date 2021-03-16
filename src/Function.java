@@ -1,6 +1,10 @@
+import java.util.HashMap;
+
 public class Function {
 
     String name;
+    String body;
+    HashMap<String,String> params = new HashMap<>();
 
     public Function(String expression) {
 
@@ -32,9 +36,29 @@ public class Function {
         String c = expression.substring(opnP+1,clsP);
         String r = expression.substring(clsP+1);
 
-        System.out.println(l + ",  " + c + ",  " + r);
+        name = l.split(" ")[1];
+
+        String[] temp = c.split(" ");
+
+        for(String s:temp){
+            params.put(s,"");
+        }
+
+        body = r;
+
+        System.out.println(name);
+        for(String s: params.keySet()){
+            System.out.println(s);
+        }
+        System.out.println(body);
 
 
+    }
+
+    public String Process(){
+
+
+        return "";
     }
 
 

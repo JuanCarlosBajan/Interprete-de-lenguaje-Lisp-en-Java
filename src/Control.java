@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class Control {
 
     public static HashMap<String, String> vars = new HashMap<>();
+    public static HashMap<String, String> using = new HashMap<>();
     private List<String> operators = Arrays.asList(new String[]{"+", "-", "*", "/"});
     OpAritmeticas operations = new OpAritmeticas();
 
@@ -103,8 +104,6 @@ public class Control {
     private boolean FunctionCounting(String expression){
 
         boolean ans = true;
-
-        String[] splitedExpression = expression.split("");
 
         int CountParenthesis = 0;
 
