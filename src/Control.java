@@ -11,6 +11,8 @@ public class Control {
     public static HashMap<String, String> using = new HashMap<>();
     private List<String> operators = Arrays.asList(new String[]{"+", "-", "*", "/"});
     OpAritmeticas operations = new OpAritmeticas();
+    Predicados predicados = new Predicados();
+    Variables Var = new Variables();
 
     /**
      * Esta es la funcion mas importante del programa.
@@ -30,6 +32,7 @@ public class Control {
         boolean foundArithmetic = false;
         boolean foundFunciton = false;
         boolean foundVar = false;
+        boolean foundPred = false;
 
         for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
             if(operators.contains(clean(splitedExpression[i]))){
@@ -50,6 +53,12 @@ public class Control {
             }
         }
 
+        for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
+            if((clean(splitedExpression[i])).equals("atom")||(clean(splitedExpression[i])).equals("equal")||(clean(splitedExpression[i])).equals("list")||(clean(splitedExpression[i])).equals(">")||(clean(splitedExpression[i])).equals("<")){
+                foundPred = true;
+            }
+        }
+
 
         if(foundArithmetic){ArithmeticAnswer = String.valueOf(operations.Process(expression));}
 
@@ -63,10 +72,13 @@ public class Control {
             ans = false;
         }
 
+        if(foundVar){
+            System.out.println("VARIABLE");
+        }
 
-        if(foundVar){System.out.println("VARIABLE");}
-
-
+        if(foundPred){
+            System.out.println("PREDICADO");
+        }
 
         System.out.println(ArithmeticAnswer);
 
