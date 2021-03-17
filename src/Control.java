@@ -26,6 +26,7 @@ public class Control {
 
         boolean ans = true;
         String ArithmeticAnswer = "";
+        String PredicateAnswer = "";
 
         String[] splitedExpression = expression.split("\\(|\\)");
 
@@ -77,10 +78,11 @@ public class Control {
         }
 
         if(foundPred){
-            System.out.println("PREDICADO");
+            PredicateAnswer = predicados.Process(expression);
         }
 
         System.out.println(ArithmeticAnswer);
+        System.out.println(PredicateAnswer);
 
         return ans;
 
