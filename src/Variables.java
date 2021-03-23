@@ -1,12 +1,25 @@
 import java.util.HashMap;
+import java.util.Map;
 
 public class Variables {
+    OpAritmeticas aritmetics = new OpAritmeticas();
+    public static HashMap<String, Integer> variables = new HashMap<String , Integer>();
 
     public String Process(String expression) {
 
         String res = "";
 
-        HashMap<String, Integer> variables = new HashMap<String , Integer>();
+        //verificar la existencia de una variable
+        for (String i : variables.keySet()) {
+            if(variables.get(i)==null){
+
+            }
+            else {
+                res="Ya existe esa variable";
+                return res;
+            }
+        }
+
 
         String[] splitedExpression = expression.split("\\(|\\)");
         String expsplit = "";
