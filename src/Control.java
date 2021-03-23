@@ -136,4 +136,8 @@ public class Control {
         return  vars;
     }
 
+    public static HashMap<String, String> getUsing(){
+        return  using;
+    }
+
 }
