@@ -12,6 +12,7 @@ public class Control {
     private List<String> operators = Arrays.asList(new String[]{"+", "-", "*", "/"});
     OpAritmeticas operations = new OpAritmeticas();
     Predicados predicados = new Predicados();
+    Cond cond = new Cond();
     Variables Var = new Variables();
 
     /**
@@ -34,6 +35,7 @@ public class Control {
         boolean foundFunciton = false;
         boolean foundVar = false;
         boolean foundPred = false;
+        boolean foundCond = false;
 
         for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
             if(operators.contains(clean(splitedExpression[i]))){
@@ -55,8 +57,14 @@ public class Control {
         }
 
         for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
-            if((clean(splitedExpression[i])).equals("atom")||(clean(splitedExpression[i])).equals("equal")||(clean(splitedExpression[i])).equals("list")||(clean(splitedExpression[i])).equals(">")||(clean(splitedExpression[i])).equals("<")||(clean(splitedExpression[i])).equals("quote")||(clean(splitedExpression[i])).equals("`")){
+            if((clean(splitedExpression[i])).equals("atom")||(clean(splitedExpression[i])).equals("equal")||(clean(splitedExpression[i])).equals("listp")||(clean(splitedExpression[i])).equals(">")||(clean(splitedExpression[i])).equals("<")||(clean(splitedExpression[i])).equals("quote")||(clean(splitedExpression[i])).equals("`")){
                 foundPred = true;
+            }
+        }
+
+        for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
+            if((clean(splitedExpression[i])).equals("cond")){
+                foundCond = true;
             }
         }
 
@@ -87,6 +95,11 @@ public class Control {
 
         if(foundPred){
             ans = predicados.Process(expression);
+        }
+
+        if(foundCond){
+            System.out.println("Cond");
+            ans = cond.Process(expression);
         }
 
         System.out.println(ans);

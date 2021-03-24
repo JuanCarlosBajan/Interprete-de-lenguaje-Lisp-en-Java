@@ -7,7 +7,7 @@ class ControlTest {
     @org.junit.jupiter.api.Test
     void process() {
 
-        control.Process("(< (+ 4 4) (+ 2 2))");
+        control.Process("(cond ((equal (atom `(- 9 9)) (listp `(+ (+ 9 9) 5))) (+ 8 (+ 9 (- 6 2))) (> 8 9)))");
 
     }
 }

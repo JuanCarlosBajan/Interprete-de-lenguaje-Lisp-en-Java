@@ -3,11 +3,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Predicados {
-    ArrayList<String> values = new ArrayList<>();
 
     public String Process(String expression){
+        ArrayList<String> values = new ArrayList<>();
+
         OpAritmeticas aritmetics = new OpAritmeticas();
         String res="";
+
 
         boolean atom=false;
         boolean equal=false;
@@ -58,9 +60,6 @@ public class Predicados {
         }
 
 
-        for(int i = 0; i<values.size();i++){
-            System.out.println(values.get(i));
-        }
 
 
 
@@ -94,7 +93,7 @@ public class Predicados {
 
                 String[] splitesp = expsplit.split(" ");
 
-                if (splitesp.length <= 2 && isNumeric(clean(splitesp[1]))) {
+                if (splitesp.length <= 2 && isNumeric(clean(splitesp[1])) || splitesp[1].contains("`")) {
                     res = "t";
                 } else if (splitesp.length <= 2 && isNumeric(control.Process(clean(splitesp[1]))) || control.Process(clean(splitesp[1])) == "t" || control.Process(clean(splitesp[1])) == "nil"){
                     res = "t";
@@ -105,7 +104,9 @@ public class Predicados {
         //equal
         if(equal==true){
             if(values.size() == 0){
+                if (expsplit.charAt(0) == ' ')expsplit = expsplit.substring(1);
                 String[] splitesp=expsplit.split(" ");
+
                 if(splitesp.length<=2){
                     System.out.println("No hay suficientes parámetros");
                 }
