@@ -3,9 +3,10 @@ import java.util.List;
 
 public class Predicados {
     private final List<String> operators = Arrays.asList("atom", "equal", "list", ">", "<");
+    OpAritmeticas aritmetics = new OpAritmeticas();
 
     public String Process(String expression){
-
+        OpAritmeticas aritmetics = new OpAritmeticas();
         String res="";
 
         boolean atom=false;
