@@ -42,6 +42,8 @@ public class OpAritmeticas {
             expression = expression.substring(0,expression.length()-1);
         }
 
+
+
         int localIndex = 0;
 
         for(String chr: expression.split("")){

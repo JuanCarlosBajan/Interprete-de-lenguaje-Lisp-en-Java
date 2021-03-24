@@ -7,7 +7,7 @@ class ControlTest {
     @org.junit.jupiter.api.Test
     void process() {
 
-        control.Process("(+ (+ 10 5 9) 8)");
+        control.Process("(equal (atom `a) (atom `a))");
 
     }
 }
