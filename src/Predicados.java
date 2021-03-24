@@ -103,6 +103,7 @@ public class Predicados {
 
         //equal
         if(equal==true){
+            Control control = new Control();
             if(values.size() == 0){
                 if (expsplit.charAt(0) == ' ')expsplit = expsplit.substring(1);
                 String[] splitesp=expsplit.split(" ");
@@ -111,7 +112,7 @@ public class Predicados {
                     System.out.println("No hay suficientes parámetros");
                 }
                 else {
-                    if(analyzequote(splitesp[1]).equals(analyzequote(splitesp[2]))){
+                    if(control.Process(analyzequote(splitesp[1])).equals(control.Process(analyzequote(splitesp[2])))){
                         res="t";
                     }
                     else{
@@ -119,7 +120,6 @@ public class Predicados {
                     }
                 }
             } else if(values.size() >= 2) {
-                Control control = new Control();
                 if(control.Process(values.get(0)).equals(control.Process(values.get(1)))){
                     res = "t";
                 } else {
@@ -127,10 +127,9 @@ public class Predicados {
                 }
 
             } else {
-                Control control = new Control();
                 if(expression.substring(5,inInd).length() > 2){
                     String local = expression.substring(5,inInd).split(" ")[1];
-                    if(analyzequote(clean(local)).equals(control.Process(values.get(0)))){
+                    if(control.Process(analyzequote(clean(local))).equals(control.Process(values.get(0)))){
                         res="t";
                     }
                     else{
@@ -139,7 +138,7 @@ public class Predicados {
                 } else if(lastInd != 0 && expression.substring(lastInd).length() > 2){
 
                     String local = expression.substring(lastInd);
-                    if(analyzequote(clean(local)).equals(control.Process(values.get(0)))){
+                    if(control.Process(analyzequote(clean(local))).equals(control.Process(values.get(0)))){
                         res="t";
                     }
                     else{
@@ -205,8 +204,8 @@ public class Predicados {
                 }
                 else {
                     try{
-                        int num1 = Integer.parseInt(splitesp[1]);
-                        int num2 = Integer.parseInt(splitesp[2]);
+                        int num1 = Integer.parseInt(control.Process(clean(splitesp[1])));
+                        int num2 = Integer.parseInt(control.Process(clean(splitesp[2])));
 
                         if (num1 > num2) {
                             res = "t";
@@ -254,8 +253,8 @@ public class Predicados {
                 }
                 else {
                     try{
-                        int num1 = Integer.parseInt(splitesp[1]);
-                        int num2 = Integer.parseInt(splitesp[2]);
+                        int num1 = Integer.parseInt(control.Process(clean(splitesp[1])));
+                        int num2 = Integer.parseInt(control.Process(clean(splitesp[2])));
 
                         if (num1 < num2) {
                             res = "t";
@@ -280,7 +279,6 @@ public class Predicados {
         boolean found = false;
         if (expression.contains("`")){found = true;}
         if (found == true){
-            System.out.println("isnum");
             String local = expression.substring(1);
             return local;
         } else {

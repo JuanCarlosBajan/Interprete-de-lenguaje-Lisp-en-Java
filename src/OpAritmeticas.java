@@ -114,20 +114,23 @@ public class OpAritmeticas {
     }
 
 
-    private int Calculate(String op, String l, String r){
+    private int Calculate(String op, String ls, String rs){
+        int l = analyze(clean(ls));
+        int r = analyze(clean(rs));
+
         int ans = 0;
         switch (clean(op)) {
             case "+":
-                ans = Integer.parseInt(clean(l)) + Integer.parseInt(clean(r));
+                ans = l + r;
                 break;
             case "-":
-                ans = Integer.parseInt(clean(l)) - Integer.parseInt(clean(r));
+                ans = l - r;
                 break;
             case "*":
-                ans = Integer.parseInt(clean(l)) * Integer.parseInt(clean(r));
+                ans = l * r;
                 break;
             case  "/":
-                ans = Integer.parseInt(clean(l)) / Integer.parseInt(clean(r));
+                ans = l / r;
                 Math.round(ans);
                 break;
         }
@@ -149,26 +152,25 @@ public class OpAritmeticas {
         return ans;
     }
 
-    private String analyze(String value){
+    private int analyze(String value){
 
 
         try{
-            Integer.parseInt(clean(value));
-            return value;
+            return Integer.parseInt(clean(value));
         } catch (Exception e) {
 
-            if(Control.getVars().containsKey(value)){
+            if(Variables.variables.containsKey(value)){
 
-                return  Control.getVars().get(value);
+                return  Variables.variables.get(value);
             }
 
             if(Control.getUsing().containsKey(value)){
-                return Control.getVars().get(value);
+                return Integer.parseInt(Control.getVars().get(value));
             }
 
 
 
-            else {return "ERROR";}
+            else {return 0;}
 
         }
 

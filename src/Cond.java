@@ -2,9 +2,9 @@ import java.util.ArrayList;
 
 public class Cond {
 
-    ArrayList<String> values = new ArrayList<>();
-
     public String Process(String expression){
+
+        ArrayList<String> values = new ArrayList<>();
 
         String res = "";
 
@@ -101,9 +101,6 @@ public class Cond {
             }
 
         }
-
-
-
         return  res;
 
     }

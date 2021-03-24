@@ -12,6 +12,7 @@ public class Control {
     private List<String> operators = Arrays.asList(new String[]{"+", "-", "*", "/"});
     OpAritmeticas operations = new OpAritmeticas();
     Predicados predicados = new Predicados();
+    Variables variables = new Variables();
     Cond cond = new Cond();
     Variables Var = new Variables();
 
@@ -90,7 +91,7 @@ public class Control {
         }
 
         if(foundVar){
-            System.out.println("VARIABLE");
+            variables.Process(expression);
         }
 
         if(foundPred){
@@ -98,11 +99,9 @@ public class Control {
         }
 
         if(foundCond){
-            System.out.println("Cond");
             ans = cond.Process(expression);
         }
 
-        System.out.println(ans);
 
         return ans;
 
