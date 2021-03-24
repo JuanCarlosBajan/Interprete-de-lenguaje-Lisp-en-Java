@@ -3,17 +3,20 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Predicados {
-    ArrayList<String> values = new ArrayList<>();
 
     public String Process(String expression){
+        ArrayList<String> values = new ArrayList<>();
+
         OpAritmeticas aritmetics = new OpAritmeticas();
         String res="";
+
 
         boolean atom=false;
         boolean equal=false;
         boolean list=false;
         boolean mas=false;
         boolean menos=false;
+        boolean openingpar = false;
 
 
         boolean found = false;
@@ -30,14 +33,16 @@ public class Predicados {
         }
         if (expression.charAt(0) == '('){
             expression = expression.substring(1);
+            openingpar = true;
         }
-        if (expression.charAt(expression.length()-1) == ')') {
+        if (expression.charAt(expression.length()-1) == ')' && openingpar) {
             expression = expression.substring(0,expression.length()-1);
         }
 
         boolean init = false;
         int inInd = 0;
         int par = 0;
+        int lastInd = 0;
 
         for(int i= 0; i<expression.length(); i++){
             if(expression.charAt(i) == '('){
@@ -47,15 +52,14 @@ public class Predicados {
             } if (expression.charAt(i) == ')'){
                 par--;
             }
-            if(par == 0 && init == true){
+            if(par == 0 && init){
                 values.add(expression.substring(inInd,i+1));
                 init = false;
+                lastInd = i;
             }
         }
 
-        for(int i = 0; i<values.size();i++){
-            System.out.println(values.get(i));
-        }
+
 
 
 
@@ -76,25 +80,39 @@ public class Predicados {
 
         //atom
         if(atom==true){
-            String[] splitesp=expsplit.split(" ");
+            Control control = new Control();
+            if(values.size() > 0){
+                if(expression.substring(4,inInd).contains("`")){
+                    res = "nil";
+                } else {
+                    if(isNumeric(control.Process(values.get(0))) || control.Process(values.get(0)) == "t" || control.Process(values.get(0)) == "nil"){
+                        res = "t";
+                    } else res = "nil";
+                }
+            } else {
 
-            if(splitesp.length<=2){
-                res="t";
-            }
-            else{
-                res="nil";
+                String[] splitesp = expsplit.split(" ");
+
+                if (splitesp.length <= 2 && isNumeric(clean(splitesp[1])) || splitesp[1].contains("`")) {
+                    res = "t";
+                } else if (splitesp.length <= 2 && isNumeric(control.Process(clean(splitesp[1]))) || control.Process(clean(splitesp[1])) == "t" || control.Process(clean(splitesp[1])) == "nil"){
+                    res = "t";
+                } else res = "nil";
             }
         }
 
         //equal
         if(equal==true){
+            Control control = new Control();
             if(values.size() == 0){
+                if (expsplit.charAt(0) == ' ')expsplit = expsplit.substring(1);
                 String[] splitesp=expsplit.split(" ");
+
                 if(splitesp.length<=2){
                     System.out.println("No hay suficientes parámetros");
                 }
                 else {
-                    if(analyzequote(splitesp[1]).equals(analyzequote(splitesp[2]))){
+                    if(control.Process(analyzequote(splitesp[1])).equals(control.Process(analyzequote(splitesp[2])))){
                         res="t";
                     }
                     else{
@@ -102,73 +120,153 @@ public class Predicados {
                     }
                 }
             } else if(values.size() >= 2) {
-                Control control = new Control();
-                if(control.Process(values.get(0)) == control.Process(values.get(1))){
+                if(control.Process(values.get(0)).equals(control.Process(values.get(1)))){
                     res = "t";
                 } else {
                     res = "nil";
                 }
 
             } else {
-                if(expression.substring(5,inInd).length() > 2){}
+                if(expression.substring(5,inInd).length() > 2){
+                    String local = expression.substring(5,inInd).split(" ")[1];
+                    if(control.Process(analyzequote(clean(local))).equals(control.Process(values.get(0)))){
+                        res="t";
+                    }
+                    else{
+                        res="nil";
+                    }
+                } else if(lastInd != 0 && expression.substring(lastInd).length() > 2){
+
+                    String local = expression.substring(lastInd);
+                    if(control.Process(analyzequote(clean(local))).equals(control.Process(values.get(0)))){
+                        res="t";
+                    }
+                    else{
+                        res="nil";
+                    }
+                }
             }
 
         }
 
         //list
         if(list==true){
-            String[] palabras=splitedExpression[2].split(" ");
-            if(palabras.length>1){
-                res="t";
-            }
-            else{
-                res="nil";
+            if(values.size() > 0){
+                if(expression.substring(4,inInd).contains("`")){
+                    res = "t";
+                } else {
+                    Control control = new Control();
+                    if(isNumeric(control.Process(values.get(0))) || control.Process(values.get(0)) == "t" || control.Process(values.get(0)) == "nil"){
+                        res = "nil";
+                    } else res = "t";
+                }
+            } else {
+                Control control = new Control();
+                String[] splitesp = expsplit.split(" ");
+
+                if (splitesp.length <= 2 && isNumeric(clean(splitesp[1]))) {
+                    res = "nil";
+                } else if (splitesp.length <= 2 && isNumeric(control.Process(clean(splitesp[1]))) || control.Process(clean(splitesp[1])) == "t" || control.Process(clean(splitesp[1])) == "nil"){
+                    res = "nil";
+                } else res = "t";
             }
         }
 
         //>
         if(mas==true){
-            String[] splitesp=expsplit.split(" ");
-            if(splitesp.length<=2){
-                System.out.println("No hay suficientes parámetros");
-            }
-            else {
-                try{
-                    int num1 = Integer.parseInt(splitesp[1]);
-                    int num2 = Integer.parseInt(splitesp[2]);
-
-                    if (num1 > num2) {
-                        res = "t";
-                    } else {
-                        res = "nil";
+            Control control = new Control();
+            if(values.size() > 1){
+                if(Integer.parseInt(control.Process(values.get(0))) > Integer.parseInt(control.Process(values.get(1)))){
+                    res = "t";
+                } if (Integer.parseInt(control.Process(values.get(0))) < Integer.parseInt(control.Process(values.get(1)))){
+                    res = "nil";
+                }
+            } else if (values.size() == 1){
+                if(expression.substring(1,inInd).length() > 2){
+                    String local = expression.substring(1,inInd).split(" ")[1];
+                    if(Integer.parseInt(control.Process(clean(local))) > Integer.parseInt(control.Process(values.get(0)))){
+                        res="t";
+                    } else{
+                        res="nil";
+                    }
+                } else if(lastInd != 0 && expression.substring(lastInd).length() > 2){
+                    String local = expression.substring(lastInd+1);
+                    if(Integer.parseInt(control.Process(clean(local))) < Integer.parseInt(control.Process(values.get(0)))){
+                        res="t";
+                    } else{
+                        res="nil";
                     }
                 }
-                catch (Exception e){
-                    System.out.println("No se pueden comparar letras");
+            } else if (values.size() == 0){
+                String[] splitesp=expsplit.split(" ");
+                if(splitesp.length<=2){
+                    System.out.println("No hay suficientes parámetros");
                 }
+                else {
+                    try{
+                        int num1 = Integer.parseInt(control.Process(clean(splitesp[1])));
+                        int num2 = Integer.parseInt(control.Process(clean(splitesp[2])));
+
+                        if (num1 > num2) {
+                            res = "t";
+                        } else {
+                            res = "nil";
+                        }
+                    }
+                    catch (Exception e){
+                        System.out.println("No se pueden comparar letras");
+                    }
+                }
+
             }
         }
 
         //<
         if(menos==true){
-            String[] splitesp=expsplit.split(" ");
-            if(splitesp.length<=2){
-                System.out.println("No hay suficientes parámetros");
-            }
-            else {
-                try{
-                    int num1 = Integer.parseInt(splitesp[1]);
-                    int num2 = Integer.parseInt(splitesp[2]);
-
-                    if (num1 < num2) {
-                        res = "t";
-                    } else {
-                        res = "nil";
+            Control control = new Control();
+            if(values.size() > 1){
+                if(Integer.parseInt(control.Process(values.get(0))) < Integer.parseInt(control.Process(values.get(1)))){
+                    res = "t";
+                } if (Integer.parseInt(control.Process(values.get(0))) > Integer.parseInt(control.Process(values.get(1)))){
+                    res = "nil";
+                }
+            } else if (values.size() == 1){
+                if(expression.substring(1,inInd).length() > 2){
+                    String local = expression.substring(1,inInd).split(" ")[1];
+                    if(Integer.parseInt(control.Process(clean(local))) < Integer.parseInt(control.Process(values.get(0)))){
+                        res="t";
+                    } else{
+                        res="nil";
+                    }
+                } else if(lastInd != 0 && expression.substring(lastInd).length() > 2){
+                    String local = expression.substring(lastInd+1);
+                    if(Integer.parseInt(control.Process(clean(local))) > Integer.parseInt(control.Process(values.get(0)))){
+                        res="t";
+                    } else{
+                        res="nil";
                     }
                 }
-                catch (Exception e){
-                    System.out.println("No se pueden comparar letras");
+            } else if (values.size() == 0){
+                String[] splitesp=expsplit.split(" ");
+                if(splitesp.length<=2){
+                    System.out.println("No hay suficientes parámetros");
                 }
+                else {
+                    try{
+                        int num1 = Integer.parseInt(control.Process(clean(splitesp[1])));
+                        int num2 = Integer.parseInt(control.Process(clean(splitesp[2])));
+
+                        if (num1 < num2) {
+                            res = "t";
+                        } else {
+                            res = "nil";
+                        }
+                    }
+                    catch (Exception e){
+                        System.out.println("No se pueden comparar letras");
+                    }
+                }
+
             }
         }
 
@@ -179,19 +277,15 @@ public class Predicados {
 
     private String analyzequote(String expression){
         boolean found = false;
-        for(int i=0; i< expression.length(); i++){
-            if(expression.charAt(i) == '`') found = true;
-        }
-        if (found = true){
+        if (expression.contains("`")){found = true;}
+        if (found == true){
             String local = expression.substring(1);
             return local;
         } else {
             if(isNumeric(expression)){
                 return expression;
             } else {
-                if (Control.getVars().containsKey(expression)){
-                    return Control.getVars().get(expression);
-                } else {return expression;}
+                return Control.getVars().getOrDefault(expression, expression);
                 //FALTA if de FUNCIONES
             }
         }
@@ -205,6 +299,20 @@ public class Predicados {
         } catch (Exception e){
             return  false;
         }
+    }
+
+    private String clean(String value){
+        String ans = "";
+
+        String[] splitedValue = value.split("");
+
+        for (int i= 0; i< splitedValue.length; i++){
+            if(splitedValue[i].equals(" ")){
+                splitedValue[i] = "";
+            }
+        }
+        ans = String.join("", splitedValue);
+        return ans;
     }
 
 }

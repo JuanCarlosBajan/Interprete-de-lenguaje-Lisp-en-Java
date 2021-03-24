@@ -12,9 +12,10 @@ public class Control {
     private List<String> operators = Arrays.asList(new String[]{"+", "-", "*", "/"});
     OpAritmeticas operations = new OpAritmeticas();
     Predicados predicados = new Predicados();
+    Variables variables = new Variables();
+    Cond cond = new Cond();
     Variables Var = new Variables();
 
-    //Function funcion = new Function();
     /**
      * Esta es la funcion mas importante del programa.
      * Recibe como parametro un String, el cual analiza a profundidad para encontrar las claves.
@@ -35,8 +36,9 @@ public class Control {
         boolean foundFunciton = false;
         boolean foundVar = false;
         boolean foundPred = false;
+        boolean foundCond = false;
 
-       /* for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
+        for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
             if(operators.contains(clean(splitedExpression[i]))){
                 foundArithmetic = true;
             }
@@ -56,37 +58,18 @@ public class Control {
         }
 
         for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
-            if((clean(splitedExpression[i])).equals("atom")||(clean(splitedExpression[i])).equals("equal")||(clean(splitedExpression[i])).equals("list")||(clean(splitedExpression[i])).equals(">")||(clean(splitedExpression[i])).equals("<")||(clean(splitedExpression[i])).equals("quote")||(clean(splitedExpression[i])).equals("`")){
+            if((clean(splitedExpression[i])).equals("atom")||(clean(splitedExpression[i])).equals("equal")||(clean(splitedExpression[i])).equals("listp")||(clean(splitedExpression[i])).equals(">")||(clean(splitedExpression[i])).equals("<")||(clean(splitedExpression[i])).equals("quote")||(clean(splitedExpression[i])).equals("`")){
                 foundPred = true;
-            }
-        }*/
-        for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
-            if(operators.contains(clean(splitedExpression[i]))){
-                foundArithmetic = true;
-            }
-            else if((clean(splitedExpression[i])).equals("defun")){
-                foundFunciton = true;
-            }
-            else if((clean(splitedExpression[i])).equals("setq")){
-                foundVar = true;
-            }
-            else if((clean(splitedExpression[i])).equals("atom")||(clean(splitedExpression[i])).equals("equal")||(clean(splitedExpression[i])).equals("list")||(clean(splitedExpression[i])).equals(">")||(clean(splitedExpression[i])).equals("<")||(clean(splitedExpression[i])).equals("quote")||(clean(splitedExpression[i])).equals("`")){
-                foundPred = true;
-            }
-            else
-            {
-
-                for (int j = 0; j < Function.funciones.keySet().toArray().length; j++) {
-                    if(splitedExpression.equals(Function.funciones.keySet().toArray()[j]))
-                    {
-                        System.out.println(j);
-                    }
-
-                }
             }
         }
 
-/////////////////////////////////////////////////////////////////////////////////////
+        for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
+            if((clean(splitedExpression[i])).equals("cond")){
+                foundCond = true;
+            }
+        }
+
+
         if(foundArithmetic){ans = String.valueOf(operations.Process(expression));}
 
         if(foundFunciton && FunctionCounting(expression)){
@@ -95,19 +78,30 @@ public class Control {
 
         }
 
+        if(Variables.variables.containsKey(clean(expression))){
+            ans = String.valueOf(Variables.variables.get(clean(expression)));
+        }
+
+        if(isNumeric(expression)){
+            ans = expression;
+        }
+
         if(foundFunciton && !FunctionCounting(expression)){
             ans = "";
         }
 
         if(foundVar){
-            System.out.println("VARIABLE");
+            variables.Process(expression);
         }
 
         if(foundPred){
             ans = predicados.Process(expression);
         }
 
-        System.out.println(ans);
+        if(foundCond){
+            ans = cond.Process(expression);
+        }
+
 
         return ans;
 
@@ -155,6 +149,14 @@ public class Control {
 
         return ans;
 
+    }
+    private boolean isNumeric(String expression){
+        try{
+            Integer.parseInt(expression);
+            return  true;
+        } catch (Exception e){
+            return  false;
+        }
     }
 
     public static HashMap<String, String> getVars(){

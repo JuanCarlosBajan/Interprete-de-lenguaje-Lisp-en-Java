@@ -13,7 +13,7 @@ class OpAritmeticasTest {
     @Test
     void operate() {
 
-        System.out.println(aritmetics.Process("(/ (+ 5 (+ 3 3)) (- (- 6 3) (- 6 2)))"));
+        System.out.println(aritmetics.Process("(+ 5 5)"));
 
     }
 }
