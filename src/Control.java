@@ -22,9 +22,9 @@ public class Control {
      * */
 
 
-    public boolean Process(String expression) {
+    public String Process(String expression) {
 
-        boolean ans = true;
+        String ans = "";
         String ArithmeticAnswer = "";
         String PredicateAnswer = "";
 
@@ -55,22 +55,22 @@ public class Control {
         }
 
         for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
-            if((clean(splitedExpression[i])).equals("atom")||(clean(splitedExpression[i])).equals("equal")||(clean(splitedExpression[i])).equals("list")||(clean(splitedExpression[i])).equals(">")||(clean(splitedExpression[i])).equals("<")){
+            if((clean(splitedExpression[i])).equals("atom")||(clean(splitedExpression[i])).equals("equal")||(clean(splitedExpression[i])).equals("list")||(clean(splitedExpression[i])).equals(">")||(clean(splitedExpression[i])).equals("<")||(clean(splitedExpression[i])).equals("quote")||(clean(splitedExpression[i])).equals("`")){
                 foundPred = true;
             }
         }
 
 
-        if(foundArithmetic){ArithmeticAnswer = String.valueOf(operations.Process(expression));}
+        if(foundArithmetic){ans = String.valueOf(operations.Process(expression));}
 
         if(foundFunciton && FunctionCounting(expression)){
 
-
+            ans = "";
 
         }
 
         if(foundFunciton && !FunctionCounting(expression)){
-            ans = false;
+            ans = "";
         }
 
         if(foundVar){
@@ -78,11 +78,10 @@ public class Control {
         }
 
         if(foundPred){
-            PredicateAnswer = predicados.Process(expression);
+            ans = predicados.Process(expression);
         }
 
-        System.out.println(ArithmeticAnswer);
-        System.out.println(PredicateAnswer);
+        System.out.println(ans);
 
         return ans;
 
@@ -134,6 +133,10 @@ public class Control {
 
     public static HashMap<String, String> getVars(){
         return  vars;
+    }
+
+    public static HashMap<String, String> getUsing(){
+        return  using;
     }
 
 }

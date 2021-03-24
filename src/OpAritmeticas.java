@@ -4,7 +4,6 @@ import java.util.List;
 
 public class OpAritmeticas {
 
-    private final List<String> operators = Arrays.asList("+", "-", "*", "/");
     //private final Control control = new Control();
 
     private List<Integer> vals = new ArrayList<>();
@@ -42,6 +41,8 @@ public class OpAritmeticas {
         if (expression.charAt(expression.length()-1) == ')') {
             expression = expression.substring(0,expression.length()-1);
         }
+
+
 
         int localIndex = 0;
 
@@ -146,6 +147,31 @@ public class OpAritmeticas {
         }
         ans = String.join("", splitedValue);
         return ans;
+    }
+
+    private String analyze(String value){
+
+
+        try{
+            Integer.parseInt(clean(value));
+            return value;
+        } catch (Exception e) {
+
+            if(Control.getVars().containsKey(value)){
+
+                return  Control.getVars().get(value);
+            }
+
+            if(Control.getUsing().containsKey(value)){
+                return Control.getVars().get(value);
+            }
+
+
+
+            else {return "ERROR";}
+
+        }
+
     }
 
 
