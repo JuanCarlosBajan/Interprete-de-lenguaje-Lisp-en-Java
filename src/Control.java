@@ -14,6 +14,7 @@ public class Control {
     Predicados predicados = new Predicados();
     Variables Var = new Variables();
 
+    //Function funcion = new Function();
     /**
      * Esta es la funcion mas importante del programa.
      * Recibe como parametro un String, el cual analiza a profundidad para encontrar las claves.
@@ -35,7 +36,7 @@ public class Control {
         boolean foundVar = false;
         boolean foundPred = false;
 
-        for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
+       /* for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
             if(operators.contains(clean(splitedExpression[i]))){
                 foundArithmetic = true;
             }
@@ -58,9 +59,34 @@ public class Control {
             if((clean(splitedExpression[i])).equals("atom")||(clean(splitedExpression[i])).equals("equal")||(clean(splitedExpression[i])).equals("list")||(clean(splitedExpression[i])).equals(">")||(clean(splitedExpression[i])).equals("<")||(clean(splitedExpression[i])).equals("quote")||(clean(splitedExpression[i])).equals("`")){
                 foundPred = true;
             }
+        }*/
+        for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
+            if(operators.contains(clean(splitedExpression[i]))){
+                foundArithmetic = true;
+            }
+            else if((clean(splitedExpression[i])).equals("defun")){
+                foundFunciton = true;
+            }
+            else if((clean(splitedExpression[i])).equals("setq")){
+                foundVar = true;
+            }
+            else if((clean(splitedExpression[i])).equals("atom")||(clean(splitedExpression[i])).equals("equal")||(clean(splitedExpression[i])).equals("list")||(clean(splitedExpression[i])).equals(">")||(clean(splitedExpression[i])).equals("<")||(clean(splitedExpression[i])).equals("quote")||(clean(splitedExpression[i])).equals("`")){
+                foundPred = true;
+            }
+            else
+            {
+
+                for (int j = 0; j < Function.funciones.keySet().toArray().length; j++) {
+                    if(splitedExpression.equals(Function.funciones.keySet().toArray()[j]))
+                    {
+                        System.out.println(j);
+                    }
+
+                }
+            }
         }
 
-
+/////////////////////////////////////////////////////////////////////////////////////
         if(foundArithmetic){ans = String.valueOf(operations.Process(expression));}
 
         if(foundFunciton && FunctionCounting(expression)){

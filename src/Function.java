@@ -4,9 +4,10 @@ public class Function {
 
     String name;
     String body;
-    LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+    public static LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
     //todas las funciones
-    HashMap<String, LinkedHashMap<String, String>> funciones = new HashMap<>();
+    public static LinkedHashMap<String, LinkedHashMap<String, String>> funciones = new LinkedHashMap<>();
+    public static LinkedHashMap<String, String> funcionesB = new LinkedHashMap<>();
 
     boolean Ope = false;
 
@@ -58,14 +59,15 @@ public class Function {
 
         body = r;
 
-        System.out.println(name);
+        //probando con prints
+        /*System.out.println(name);
         for (String s : params.keySet()) {
             System.out.println(s);
         }
-        System.out.println(body);
+        System.out.println(body);*/
 
-
-
+        funciones.put(name, params);
+        funcionesB.put(name, body);
 
     }
 
@@ -76,27 +78,51 @@ public class Function {
         String parametro;
         Scanner scan = new Scanner(System.in);
 
-        if(funciones.isEmpty() || !funciones.containsKey(key))
-        {
+        //if(funciones.isEmpty() || !funciones.containsKey(key))
+        //{
             LinkedHashMap<String, String> inner = new LinkedHashMap<String, String>();
             System.out.println("Porfavor ingrese los valores que tendra cada parametro de la respectiva fncion(se le pedira uno por uno)");
             for(int i = 0; i < params.keySet().toArray().length; i++)
             {
-                System.out.println("Parametro: " + params.keySet().toArray()[i]);
-                System.out.println("Valor:");
-                parametro = scan.nextLine();
-                inner.put(params.keySet().toArray()[i].toString(),parametro);
+                if(nombre.equals(funciones.keySet().toArray()[i]))
+                {
+                    System.out.println("Parametro: " + params.keySet().toArray()[i]);
+                    System.out.println("Valor:");
+                    parametro = scan.nextLine();
+                    inner.put(params.keySet().toArray()[i].toString(),parametro);
+                }
+
             }
             funciones.put(key, inner);
-        }
 
+            funcionesB.put(key, body);
+        //}
+
+        //muestra las llaves
         for (String s : funciones.keySet()) {
             System.out.println(s);
         }
-        // Print values
+        // muestra los valores
         for (HashMap<String, String> i : funciones.values()) {
             System.out.println(i);
 
+        }
+
+
+    }
+
+    public String devolverB(String nombre)
+    {
+        String cuerpo = "";
+
+        for (String s : funciones.keySet()) {
+            if(nombre.equals(Function.funciones.keySet().toArray()[s]))
+            {
+                for (HashMap<String, String> i : funciones.values()) {
+                    System.out.println(i);
+                    return cuerpo;
+                }
+            }
         }
 
 
