@@ -5,6 +5,6 @@ class PredicadosTest {
 
     @Test
     public void Operate(){
-        System.out.println(predicados.Process("(list (hola) )"));
+        System.out.println(predicados.Process("(equal 123 123)"));
     }
 }
