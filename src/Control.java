@@ -69,6 +69,14 @@ public class Control {
 
         }
 
+        if(Variables.variables.containsKey(clean(expression))){
+            ans = String.valueOf(Variables.variables.get(clean(expression)));
+        }
+
+        if(isNumeric(expression)){
+            ans = expression;
+        }
+
         if(foundFunciton && !FunctionCounting(expression)){
             ans = "";
         }
@@ -129,6 +137,14 @@ public class Control {
 
         return ans;
 
+    }
+    private boolean isNumeric(String expression){
+        try{
+            Integer.parseInt(expression);
+            return  true;
+        } catch (Exception e){
+            return  false;
+        }
     }
 
     public static HashMap<String, String> getVars(){
