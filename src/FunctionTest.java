@@ -7,7 +7,12 @@ class FunctionTest {
 
     @org.junit.jupiter.api.Test
     void process() {
-        f.asignarP(f.name);
+
+
+        //System.out.println(f.devolverB("hola"));
+       // f.asignarP("hola","5 5 5");
+        Control.using.put("aasdasd", "6");
+        f.Process("hola", "5 5 5");
     }
 
 }

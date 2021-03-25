@@ -9,11 +9,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class OpAritmeticasTest {
 
     OpAritmeticas aritmetics = new OpAritmeticas();
+    Variables variables=new Variables();
 
     @Test
     void operate() {
-
-        System.out.println(aritmetics.Process("(+ 5 5)"));
+        variables.Process("(setq x 6)");
+        System.out.println(aritmetics.Process("(+ (/ (* x 9) 5) 32)"));
 
     }
 }

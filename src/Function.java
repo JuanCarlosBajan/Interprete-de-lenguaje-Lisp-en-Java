@@ -1,10 +1,11 @@
+import javax.swing.table.TableRowSorter;
 import java.util.*;
 
 public class Function {
 
     String name;
     String body;
-    public static LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
+    public LinkedHashMap<String, String> params = new LinkedHashMap<String, String>();
     //todas las funciones
     public static LinkedHashMap<String, LinkedHashMap<String, String>> funciones = new LinkedHashMap<>();
     public static LinkedHashMap<String, String> funcionesB = new LinkedHashMap<>();
@@ -47,7 +48,7 @@ public class Function {
 
         String l = expression.substring(0, opnP);
         String c = expression.substring(opnP + 1, clsP);
-        String r = expression.substring(clsP + 1);
+        String r = expression.substring(clsP + 2);
 
         name = l.split(" ")[1];
 
@@ -111,21 +112,79 @@ public class Function {
 
     }
 
-    public String devolverB(String nombre)
-    {
-        String cuerpo = "";
-
-        for (String s : funciones.keySet()) {
-            if(nombre.equals(Function.funciones.keySet().toArray()[s]))
-            {
-                for (HashMap<String, String> i : funciones.values()) {
-                    System.out.println(i);
-                    return cuerpo;
-                }
+    public void asignarP(String nombre, String params){
+        if (params.charAt(0) == ' '){
+            params = params.substring(1);
+        }
+        String[] p = params.split(" ");
+        if(funciones.containsKey(nombre)){
+            for(int i = 0; i<funciones.get(nombre).keySet().size(); i++){
+                funciones.get(nombre).put((String) (funciones.get(nombre).keySet().toArray())[i],p[i]) ;
+            }
+            for(int i = 0; i<funciones.get(nombre).keySet().size(); i++){
+                System.out.println((funciones.get(nombre).keySet().toArray())[i] + ", " + (funciones.get(nombre).values().toArray())[i]);
             }
         }
 
 
+    }
+
+    public String devolverB(String nombre)
+    {
+        String cuerpo = "";
+        boolean found = false;
+
+        for (String s : funciones.keySet()) {
+            if(s.equals(nombre))
+            {
+                found = true;
+                cuerpo = funcionesB.get(nombre);
+            }
+        }
+
+        if (found == false){
+            return "Not found";
+        } else {
+            return cuerpo;
+        }
+
+    }
+
+    public String Process(String n, String par){
+        Control c = new Control();
+        String ans = "ERROR";
+        LinkedHashMap<String, String> usingBefore = new LinkedHashMap<>();
+
+        if(funciones.containsKey(n)){
+            asignarP(n, par);
+            for(int i = 0; i<funciones.get(n).keySet().size(); i++){
+                String currentvar = (String) (funciones.get(n).keySet().toArray())[i];
+                if(Control.using.containsKey(currentvar)) {
+                    usingBefore.put(currentvar, Control.using.get(currentvar));
+                    Control.using.replace(currentvar, (String) (funciones.get(n).values().toArray())[i]);
+                } else {
+                    Control.using.put(currentvar, (String) (funciones.get(n).values().toArray())[i]);
+                }
+            }
+            ans = c.Process(funcionesB.get(n));
+        }
+
+        if(!usingBefore.isEmpty()){
+            for(String s: usingBefore.keySet()){
+                Control.using.put(s, usingBefore.get(s));
+            }
+        }
+        for(String s: funciones.get(n).keySet()){
+            if(!usingBefore.keySet().contains(s)){
+                    Control.using.remove(s);
+            }
+        }
+
+        for(String s: Control.using.keySet()){
+            System.out.println(s+ ", " + Control.using.get(s));
+        }
+
+        return ans;
     }
 
 
