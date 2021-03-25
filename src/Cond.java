@@ -9,7 +9,6 @@ public class Cond {
         String res = "";
 
 
-
         boolean openingpar = false;
         boolean found = false;
         for(int i= 0; i<expression.length(); i++){
@@ -42,7 +41,6 @@ public class Cond {
         int par = 0;
 
 
-
         for(int i= 0; i<expression.length(); i++){
             if(expression.charAt(i) == '('){
                 if (init == false) {init = true; inInd = i;}
@@ -64,7 +62,6 @@ public class Cond {
         Control control = new Control();
 
 
-
         // NO NECESARIAMENTE LAS DOS ACCIONES ESTAN ENCERRADAS EN PARENTESIS ENTONCES TENES QUE VER ESO
 
         if(values.size() > 2){
@@ -74,32 +71,38 @@ public class Cond {
                 res = control.Process(values.get(2));
             }
         } else if(values.size() == 2){
-
         if(expression.substring(firslasttind +1 ,inInd).length() >= 2){
             if (control.Process(values.get(0)) == "t"){
                 res =control.Process(clean(expression.substring(firslasttind +1 ,inInd)));
             } else {
                 res = control.Process(values.get(1));
             }
-        } else if (expression.substring(llastind).length() >=2){
+        } else if (expression.substring(llastind+1).length() >=2){
             if (control.Process(values.get(0)) == "nil"){
-                res =control.Process(clean(expression.substring(firslasttind +1 ,inInd)));
+                res =control.Process(clean(expression.substring(llastind+1)));
             } else {
                 res = control.Process(values.get(1));
             }
         } else {
-            res = "ERROR";
+            if (control.Process(values.get(0)).equals("t")){
+                res =control.Process(values.get(1));
+            } else {
+                res = " ";
+            }
         }
-
-        } else if(values.size() == 1){
+        } else if(values.size() == 1) {
             String local = expression.substring(firslasttind+1);
             if (local.charAt(0) == ' '){local = local.substring(1);}
             if (control.Process(values.get(0)) == "t"){
                 res =control.Process(clean(local.split(" ")[0]));
             } else {
-                res = control.Process(control.Process(clean(local.split(" ")[1])));
-            }
+                try{
+                    res = control.Process(control.Process(clean(local.split(" ")[1])));
+                } catch (Exception e){
+                    return "";
+                }
 
+            }
         }
         return  res;
 

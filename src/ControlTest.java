@@ -7,7 +7,9 @@ class ControlTest {
     @org.junit.jupiter.api.Test
     void process() {
 
-        control.Process("(setq hola (+ 5 5))");
+        Variables.variables.put("algo",2);
+        Control.using.put("t","3");
+        System.out.println(control.Process("(cond ((= x 1.0) (1.0)) ((= x 0.0) (1.0)) (t(*(factorial (- x 1)) x )))"));
 
     }
 }

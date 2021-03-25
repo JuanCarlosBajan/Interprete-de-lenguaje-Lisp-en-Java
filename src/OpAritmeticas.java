@@ -73,8 +73,8 @@ public class OpAritmeticas {
 
         try {
             // Esto solo debe darse si hay dos opening parenthesis
-            left = expression.substring(FirstIndex,localIndex);
-            right = expression.substring(localIndex);
+            left = AF(expression.substring(FirstIndex,localIndex));
+            right = AF(expression.substring(localIndex));
             if(right.length()<2) {
                 right = left;
                 left = expression.substring(2,FirstIndex);
@@ -84,11 +84,11 @@ public class OpAritmeticas {
         } catch (StringIndexOutOfBoundsException e){
             if(CountBeforeFirstParenthesis > 2){
                 left = expression.substring(2,CountBeforeFirstParenthesis);
-                right = expression.substring(CountBeforeFirstParenthesis);
+                right = AF(expression.substring(CountBeforeFirstParenthesis));
                 ans = Calculate(expression.substring(0,2),String.valueOf(Process(left)),String.valueOf(Process(right)));
             }
             if(CountAfterLastParenthesis > 2){
-                left = expression.substring(2,CountAfterLastParenthesis);
+                left = AF(expression.substring(2,CountAfterLastParenthesis));
                 right = expression.substring(CountAfterLastParenthesis);
                 ans = Calculate(expression.substring(0,2),String.valueOf(Process(left)),String.valueOf(Process(right)));
             }
@@ -141,6 +141,8 @@ public class OpAritmeticas {
     private String clean(String value){
         String ans = "";
 
+        ans.replace(" ", "");
+
         String[] splitedValue = value.split("");
 
         for (int i= 0; i< splitedValue.length; i++){
@@ -165,15 +167,29 @@ public class OpAritmeticas {
             }
 
             if(Control.getUsing().containsKey(value)){
-                return Integer.parseInt(Control.getVars().get(value));
+                return Integer.parseInt(Control.using.get(value));
             }
-
-
 
             else {return 0;}
 
         }
 
+    }
+
+    private String AF(String value){
+        String respaldo = value;
+
+        Control control = new Control();
+
+        if(value.charAt(0) == ' ') value = value.substring(1);
+        if(value.charAt(0) == '(') value = value.substring(1);
+        if(value.charAt(value.length()-1) == ' ') value = value.substring(0, value.length()-1);
+        if(value.charAt(value.length()-1) == ')') value = value.substring(0, value.length()-1);
+        if(value.charAt(0) == ' ') value = value.substring(1);
+
+        if(value.split(" ").length >= 2 && Function.funciones.containsKey(value.split(" ")[0])){
+            return control.Process(respaldo);
+        } else {return  respaldo;}
     }
 
 

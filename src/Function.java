@@ -72,6 +72,10 @@ public class Function {
 
     }
 
+    public Function() {
+
+    }
+
     // asignando los parametros con su respetiva funcion
     public void asignarP(String nombre) {
 
@@ -151,6 +155,7 @@ public class Function {
     }
 
     public String Process(String n, String par){
+
         Control c = new Control();
         String ans = "ERROR";
         LinkedHashMap<String, String> usingBefore = new LinkedHashMap<>();
@@ -174,6 +179,7 @@ public class Function {
                 Control.using.put(s, usingBefore.get(s));
             }
         }
+
         for(String s: funciones.get(n).keySet()){
             if(!usingBefore.keySet().contains(s)){
                     Control.using.remove(s);
@@ -183,6 +189,7 @@ public class Function {
         for(String s: Control.using.keySet()){
             System.out.println(s+ ", " + Control.using.get(s));
         }
+
 
         return ans;
     }

@@ -13,6 +13,7 @@ public class Control {
     OpAritmeticas operations = new OpAritmeticas();
     Predicados predicados = new Predicados();
     Variables variables = new Variables();
+    Function func = new Function();
     Cond cond = new Cond();
     Variables Var = new Variables();
 
@@ -37,49 +38,51 @@ public class Control {
         boolean foundVar = false;
         boolean foundPred = false;
         boolean foundCond = false;
+        boolean foundFunDefined = false;
+        boolean current = false;
 
-        for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
+        for(int i = 0; i < (Math.min(splitedExpression.length, 2)) ; i++){
             if(operators.contains(clean(splitedExpression[i]))){
                 foundArithmetic = true;
+                break;
             }
-        }
-
-        for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
-
             if((clean(splitedExpression[i])).equals("defun")){
                 foundFunciton = true;
+                break;
             }
-        }
-
-        for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
             if((clean(splitedExpression[i])).equals("setq")){
                 foundVar = true;
+                break;
             }
-        }
-
-        for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
             if((clean(splitedExpression[i])).equals("atom")||(clean(splitedExpression[i])).equals("equal")||(clean(splitedExpression[i])).equals("listp")||(clean(splitedExpression[i])).equals(">")||(clean(splitedExpression[i])).equals("<")||(clean(splitedExpression[i])).equals("quote")||(clean(splitedExpression[i])).equals("`")){
                 foundPred = true;
+                break;
+            }
+            if((clean(splitedExpression[i])).equals("cond")){
+                foundCond = true;
+                break;
+            }
+            if(Function.funciones.containsKey(clean(splitedExpression[i]))){
+                foundFunDefined = true;
+                break;
+
             }
         }
 
-        for(int i = 0; i < (Math.min(splitedExpression.length, 3)) ; i++){
-            if((clean(splitedExpression[i])).equals("cond")){
-                foundCond = true;
-            }
-        }
 
 
         if(foundArithmetic){ans = String.valueOf(operations.Process(expression));}
 
         if(foundFunciton && FunctionCounting(expression)){
-
             ans = "";
-
         }
 
         if(Variables.variables.containsKey(clean(expression))){
             ans = String.valueOf(Variables.variables.get(clean(expression)));
+        }
+
+        if(using.containsKey(clean(expression))){
+            ans = String.valueOf(using.get(expression));
         }
 
         if(isNumeric(expression)){
@@ -100,6 +103,23 @@ public class Control {
 
         if(foundCond){
             ans = cond.Process(expression);
+        }
+
+        if(foundFunDefined){
+            if(expression.charAt(0) == '('){
+                expression= expression.substring(1);
+            }
+            if(expression.charAt(expression.length()-1) == ')'){
+                expression= expression.substring(0,expression.length()-1);
+            }
+            int i = 0;
+            for(int x = 0; x< expression.length();x++){
+                if(expression.charAt(x) == ' '){
+                    i = x;
+                    break;
+                }
+            }
+            ans = func.Process(expression.substring(0,i), expression.substring(i+1));
         }
 
 
