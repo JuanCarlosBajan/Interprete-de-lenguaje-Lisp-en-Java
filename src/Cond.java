@@ -1,110 +1,133 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Stack;
 
 public class Cond {
 
     public String Process(String expression){
 
-        ArrayList<String> values = new ArrayList<>();
-
+        ArrayList<String> tests = new ArrayList<>();
         String res = "";
 
+        //System.out.println(expression);
 
-        boolean openingpar = false;
-        boolean found = false;
-        for(int i= 0; i<expression.length(); i++){
-            if(expression.charAt(i) == ' ' && !found){
+        while (true){
+            if(expression.charAt(0) == ' '){
                 expression = expression.substring(1);
-            }
-            if(expression.charAt(i) == '('){
-                break;
-            }
-            if(expression.charAt(i) != '(' && expression.charAt(i) != ' '){
+            } else {
                 break;
             }
         }
-
-
-        if (expression.charAt(0) == '('){
-            expression = expression.substring(1);
-            openingpar = true;
-        }
-        if (expression.charAt(expression.length()-1) == ')' && openingpar) {
-            expression = expression.substring(0,expression.length()-1);
-        }
-
-        expression = expression.substring(6,expression.length()-1);
-
-        boolean init = false;
-        int firslasttind = 0;
-        int llastind = 0;
-        int inInd = 0;
-        int par = 0;
-
-
-        for(int i= 0; i<expression.length(); i++){
-            if(expression.charAt(i) == '('){
-                if (init == false) {init = true; inInd = i;}
-                par++;
-
-            } if (expression.charAt(i) == ')'){
-                par--;
-            }
-            if(par == 0 && init){
-                if (firslasttind == 0){
-                    firslasttind = i;
-                }
-                values.add(expression.substring(inInd,i+1));
-                init = false;
-                llastind = i;
+        while (true){
+            if(expression.charAt(expression.length()-1) == ' '){
+                expression = expression.substring(0,expression.length()-1);
+            } else {
+                break;
             }
         }
 
-        Control control = new Control();
+        expression=expression.substring(1,expression.length()-1);
+        Stack<Integer> indexes = new Stack<>();
+        int opening = 0;
 
-
-        // NO NECESARIAMENTE LAS DOS ACCIONES ESTAN ENCERRADAS EN PARENTESIS ENTONCES TENES QUE VER ESO
-
-        if(values.size() > 2){
-            if (control.Process(values.get(0)) == "t"){
-                res =control.Process(values.get(1));
-            } else {
-                res = control.Process(values.get(2));
-            }
-        } else if(values.size() == 2){
-        if(expression.substring(firslasttind +1 ,inInd).length() >= 2){
-            if (control.Process(values.get(0)) == "t"){
-                res =control.Process(clean(expression.substring(firslasttind +1 ,inInd)));
-            } else {
-                res = control.Process(values.get(1));
-            }
-        } else if (expression.substring(llastind+1).length() >=2){
-            if (control.Process(values.get(0)) == "nil"){
-                res =control.Process(clean(expression.substring(llastind+1)));
-            } else {
-                res = control.Process(values.get(1));
-            }
-        } else {
-            if (control.Process(values.get(0)).equals("t")){
-                res =control.Process(values.get(1));
-            } else {
-                res = " ";
+        for(int x = 0; x< expression.length(); x++){
+            if(expression.charAt(x) == '(' && opening == 0){
+                opening++;
+                indexes.add(x);
+            } else if(expression.charAt(x) == '(' && opening != 0){
+                opening++;
+            } else if (expression.charAt(x) == ')' && opening == 1){
+                opening--;
+                indexes.add(x);
+            } else if (expression.charAt(x) == ')' && opening != 1){
+                opening--;
             }
         }
-        } else if(values.size() == 1) {
-            String local = expression.substring(firslasttind+1);
-            if (local.charAt(0) == ' '){local = local.substring(1);}
-            if (control.Process(values.get(0)) == "t"){
-                res =control.Process(clean(local.split(" ")[0]));
-            } else {
-                try{
-                    res = control.Process(control.Process(clean(local.split(" ")[1])));
-                } catch (Exception e){
-                    return "";
-                }
 
+        int initialSize = indexes.size();
+
+        for (int x = 0; x< initialSize/2; x++){
+            int end = indexes.peek();
+            indexes.pop();
+            int start = indexes.peek();
+            indexes.pop();
+            tests.add(expression.substring(start,end+1));
+        }
+
+        Collections.reverse(tests);
+
+
+        for(String s: tests){
+            res = SubProcess(s);
+            if (res != "") {
+                break;
             }
         }
+
         return  res;
+
+    }
+
+
+    private String SubProcess(String expression){
+
+        String ans = "";
+        Control control = new Control();
+        ArrayList<String> values = new ArrayList<>();
+        expression = expression.substring(1,expression.length()-1);
+        Stack<Integer> indexes = new Stack<>();
+        int opening = 0;
+
+        for(int x = 0; x< expression.length(); x++){
+            if(expression.charAt(x) == '(' && opening == 0){
+                opening++;
+                indexes.add(x);
+            } else if(expression.charAt(x) == '(' && opening != 0){
+                opening++;
+            } else if (expression.charAt(x) == ')' && opening == 1){
+                opening--;
+                indexes.add(x);
+            } else if (expression.charAt(x) == ')' && opening != 1){
+                opening--;
+            }
+        }
+
+        if(expression.length() - indexes.peek() > 1){
+            values.add(expression.substring(indexes.peek()+1));
+            expression = expression.substring(0,indexes.peek()+1);
+        }
+
+        int initialSize = indexes.size();
+
+        for (int x = 0; x < initialSize/2; x++){
+            int end = indexes.peek();
+            indexes.pop();
+            int start = indexes.peek();
+            indexes.pop();
+
+
+            values.add(expression.substring(start,end+1));
+
+            if(indexes.size() > 1 && start - indexes.peek() > 2){
+                values.add(expression.substring(indexes.peek()+1,start));
+            }
+
+            if (indexes.size() == 0 && start > 1){
+                values.add(expression.substring(0, start));
+            }
+        }
+
+        Collections.reverse(values);
+
+
+        if(!clean(values.get(0)).equals("t")){
+            if(control.Process(values.get(0)) == "t"){
+                ans = control.Process(values.get(1));
+            }
+        } else if (clean(values.get(0)).equals("t")) {
+            ans = control.Process(values.get(1));
+        }
+        return ans;
 
     }
 

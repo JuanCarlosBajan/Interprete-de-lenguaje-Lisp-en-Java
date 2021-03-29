@@ -117,18 +117,93 @@ public class Function {
     }
 
     public void asignarP(String nombre, String params){
+
+        Control control = new Control();
+        ArrayList<String> par = new ArrayList<>();
+        Stack<Integer> indexes = new Stack<>();
+        int opening = 0;
+
+        for(int x = 0; x< params.length(); x++){
+            if(params.charAt(x) == '(' && opening == 0){
+                opening++;
+                indexes.add(x);
+            } else if(params.charAt(x) == '(' && opening != 0){
+                opening++;
+            } else if (params.charAt(x) == ')' && opening == 1){
+                opening--;
+                indexes.add(x);
+            } else if (params.charAt(x) == ')' && opening != 1){
+                opening--;
+            }
+        }
+
+        String paramsModified = "";
+
         if (params.charAt(0) == ' '){
             params = params.substring(1);
         }
-        String[] p = params.split(" ");
-        if(funciones.containsKey(nombre)){
-            for(int i = 0; i<funciones.get(nombre).keySet().size(); i++){
-                funciones.get(nombre).put((String) (funciones.get(nombre).keySet().toArray())[i],p[i]) ;
+
+        if (indexes.size() > 0) {
+            int initialIndex = indexes.size();
+            paramsModified = params.substring(indexes.peek()+1);
+            String[] pf = paramsModified.split(" ");
+            for(int i = pf.length-1; i>=0; i-- ){
+                if(pf[i] != "" && pf[i] != " "){
+                    par.add(pf[i]);
+                }
             }
-            for(int i = 0; i<funciones.get(nombre).keySet().size(); i++){
-                System.out.println((funciones.get(nombre).keySet().toArray())[i] + ", " + (funciones.get(nombre).values().toArray())[i]);
+
+            for(int x = 0; x < initialIndex/2; x++){
+                int end = indexes.peek();
+                indexes.pop();
+                int start = indexes.peek();
+                indexes.pop();
+
+
+                par.add(control.Process(params.substring(start,end+1)));
+
+
+                if(indexes.size() != 0){
+                    paramsModified = params.substring(indexes.peek()+1, start);
+                    String[] p = paramsModified.split(" ");
+                    for(int i = p.length-1; i>=0; i-- ){
+                        if(p[i] != "" && p[i] != " "){
+                            par.add(p[i]);
+                        }
+                    }
+                } else {
+                    paramsModified = params.substring(0, start);
+                    String[] p = paramsModified.split(" ");
+                    for(int i = p.length-1; i>=0; i-- ){
+                        if(p[i] != "" && p[i] != " "){
+                            par.add(p[i]);
+                        }
+                    }
+                }
+            }
+        } else {
+            String[] p = params.split(" ");
+            for(int i = p.length-1; i>=0; i-- ){
+                if(p[i] != "" && p[i] != " "){
+                    par.add(p[i]);
+                }
             }
         }
+
+        Collections.reverse(par);
+
+        for(String s: par){
+            //System.out.println(s);
+        }
+
+
+        for(int i = 0; i<funciones.get(nombre).keySet().size(); i++){
+            funciones.get(nombre).put((String) (funciones.get(nombre).keySet().toArray())[i],par.get(i)) ;
+        }
+        for(int i = 0; i<funciones.get(nombre).keySet().size(); i++){
+            //System.out.println((funciones.get(nombre).keySet().toArray())[i] + ", " + (funciones.get(nombre).values().toArray())[i]);
+        }
+
 
 
     }
@@ -187,7 +262,7 @@ public class Function {
         }
 
         for(String s: Control.using.keySet()){
-            System.out.println(s+ ", " + Control.using.get(s));
+            //System.out.println(s+ ", " + Control.using.get(s));
         }
 
 

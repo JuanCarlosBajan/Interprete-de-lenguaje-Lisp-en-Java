@@ -9,7 +9,7 @@ class ControlTest {
 
         Variables.variables.put("algo",2);
         Control.using.put("t","3");
-        System.out.println(control.Process("(cond ((= x 1.0) (1.0)) ((= x 0.0) (1.0)) (t(*(factorial (- x 1)) x )))"));
+        System.out.println(control.Process("(cond ((= x 1.0) (1.0)) ((= x 0.0) 1.0) (t (* (factorial (- x 1)) x )))"));
 
     }
 }

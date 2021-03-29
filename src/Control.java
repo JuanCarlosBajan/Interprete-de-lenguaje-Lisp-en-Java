@@ -27,9 +27,8 @@ public class Control {
 
     public String Process(String expression) {
 
+
         String ans = "";
-        String ArithmeticAnswer = "";
-        String PredicateAnswer = "";
 
         String[] splitedExpression = expression.split("\\(|\\)");
 
@@ -74,20 +73,26 @@ public class Control {
         if(foundArithmetic){ans = String.valueOf(operations.Process(expression));}
 
         if(foundFunciton && FunctionCounting(expression)){
-            ans = "";
+            Function f = new Function(expression);
         }
 
-        if(Variables.variables.containsKey(clean(expression))){
-            ans = String.valueOf(Variables.variables.get(clean(expression)));
+        if(Variables.variables.containsKey(cleanString(expression))){
+            ans = String.valueOf(Variables.variables.get(cleanString(expression)));
         }
 
-        if(using.containsKey(clean(expression))){
-            ans = String.valueOf(using.get(expression));
+        if(using.containsKey(cleanString(expression))){
+            ans = String.valueOf(using.get(cleanString(expression)));
         }
 
-        if(isNumeric(expression)){
-            ans = expression;
+
+        if(isNumeric(cleanString(expression))){
+            ans = cleanString(expression);
         }
+
+        if(cleanString(expression) == "t" || cleanString(expression) == "nil"){
+            return cleanString(expression);
+        }
+
 
         if(foundFunciton && !FunctionCounting(expression)){
             ans = "";
@@ -152,6 +157,12 @@ public class Control {
         }
         return ans;
 
+    }
+
+    private String cleanString(String expression){
+        expression.replace("(", "");
+        expression.replace(")","");
+        return expression.replace(" ", "");
     }
 
     private boolean FunctionCounting(String expression){

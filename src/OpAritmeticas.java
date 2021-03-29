@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class OpAritmeticas {
 
@@ -10,102 +8,118 @@ public class OpAritmeticas {
 
 
     public int Process(String expression) {
+        ArrayList<String> exps = new ArrayList<>();
+        //System.out.println(expression);
 
-        int ans = 0;
-
-        int CountBeforeFirstParenthesis = -1;
-        int CountAfterLastParenthesis = -1;
-        int FirstIndex = -1;
-        int ParenthesisCount = 0;
-        int ClosedExpression = 0;
-
-        boolean found = false;
-
-        for(int i= 0; i<expression.length(); i++){
-            if(expression.charAt(i) == ' ' && !found){
+        while (true){
+            if(expression.charAt(0) == ' '){
                 expression = expression.substring(1);
-            }
-            if(expression.charAt(i) == '('){
+            } else {
                 break;
             }
-            if(expression.charAt(i) != '(' && expression.charAt(i) != ' '){
+        }
+        while (true){
+            if(expression.charAt(expression.length()-1) == ' '){
+                expression = expression.substring(0,expression.length()-1);
+            } else {
                 break;
             }
         }
 
-
-        if (expression.charAt(0) == '('){
-            expression = expression.substring(1);
-        }
-
-        if (expression.charAt(expression.length()-1) == ')') {
-            expression = expression.substring(0,expression.length()-1);
-        }
+        expression=expression.substring(1,expression.length()-1);
+        Stack<Integer> indexes = new Stack<>();
+        int opening = 0;
 
 
-
-        int localIndex = 0;
-
-        for(String chr: expression.split("")){
-            if (ClosedExpression == 0 && ParenthesisCount > 0){
-                CountAfterLastParenthesis = localIndex;
-                break;
+        for(int x = 0; x< expression.length(); x++){
+            if(expression.charAt(x) == '(' && opening == 0){
+                opening++;
+                indexes.add(x);
+            } else if(expression.charAt(x) == '(' && opening != 0){
+                opening++;
+            } else if (expression.charAt(x) == ')' && opening == 1){
+                opening--;
+                indexes.add(x);
+            } else if (expression.charAt(x) == ')' && opening != 1){
+                opening--;
             }
-            if(chr.equals("(")){
-                FirstIndex = (FirstIndex == -1)? localIndex:FirstIndex;
-                ParenthesisCount ++;
-                ClosedExpression ++;
-                if(CountBeforeFirstParenthesis == -1){
-                    CountBeforeFirstParenthesis = localIndex;
+        }
+
+        Control control = new Control();
+        Collections.reverse(exps);
+        String paramsModified = "";
+        ArrayList<String> par = new ArrayList<>();
+
+        if (indexes.size() > 0){
+
+            int initialIndex = indexes.size();
+
+            paramsModified = expression.substring(indexes.peek()+1);
+            String[] pf = paramsModified.split(" ");
+            for(int i = pf.length-1; i>=0; i-- ){
+                if(pf[i] != "" && pf[i] != " "){
+                    par.add(pf[i]);
                 }
-
             }
-            if (chr.equals(")")){
-                ParenthesisCount++;
-                ClosedExpression --;
-            }
-            localIndex++;
-        }
 
 
-        String left = "";
-        String right = "";
 
-        try {
-            // Esto solo debe darse si hay dos opening parenthesis
-            left = AF(expression.substring(FirstIndex,localIndex));
-            right = AF(expression.substring(localIndex));
-            if(right.length()<2) {
-                right = left;
-                left = expression.substring(2,FirstIndex);
-            }
-            ans = Calculate(expression.substring(0,2),String.valueOf(Process(left)),String.valueOf(Process(right)));
+            for(int x = 0; x < initialIndex/2; x++){
+                int end = indexes.peek();
+                indexes.pop();
+                int start = indexes.peek();
+                indexes.pop();
 
-        } catch (StringIndexOutOfBoundsException e){
-            if(CountBeforeFirstParenthesis > 2){
-                left = expression.substring(2,CountBeforeFirstParenthesis);
-                right = AF(expression.substring(CountBeforeFirstParenthesis));
-                ans = Calculate(expression.substring(0,2),String.valueOf(Process(left)),String.valueOf(Process(right)));
-            }
-            if(CountAfterLastParenthesis > 2){
-                left = AF(expression.substring(2,CountAfterLastParenthesis));
-                right = expression.substring(CountAfterLastParenthesis);
-                ans = Calculate(expression.substring(0,2),String.valueOf(Process(left)),String.valueOf(Process(right)));
-            }
-            if (CountBeforeFirstParenthesis == -1){
-                if(expression.split(" ").length > 2) {
-                    String[] SplitedExpression = expression.split(" ");
-                    ans = Calculate(SplitedExpression[0],SplitedExpression[1],SplitedExpression[2]);
+
+                par.add(control.Process(expression.substring(start,end+1)));
+
+
+                if(indexes.size() != 0){
+                    paramsModified = expression.substring(indexes.peek()+1, start);
+                    String[] p = paramsModified.split(" ");
+                    for(int i = p.length-1; i>=0; i-- ){
+                        if(p[i] != "" && p[i] != " "){
+                            par.add(p[i]);
+                        }
+                    }
                 } else {
-                    String[] SplitedExpression = expression.split(" ");
-                    for(String s: SplitedExpression){
-                        try {
-                            ans = Integer.parseInt(s);
-                        } catch (Exception er) {
-
+                    paramsModified = expression.substring(0, start);
+                    String[] p = paramsModified.split(" ");
+                    for(int i = p.length-1; i>=0; i-- ){
+                        if(p[i] != "" && p[i] != " "){
+                            par.add(p[i]);
                         }
                     }
                 }
+            }
+        } else {
+            String[] p = expression.split(" ");
+            for(int i = p.length-1; i>=0; i-- ){
+                if(p[i] != "" && p[i] != " "){
+                    par.add(p[i]);
+                }
+            }
+        }
+
+        Collections.reverse(par);
+
+        int ans = analyze(par.get(1));
+
+        for(int i = par.size()-1; i> 1; i--){
+            switch (cleanString(par.get(0))) {
+                case "+":
+                    ans = ans + analyze(par.get(i));
+                    break;
+                case "-":
+                    ans = ans - analyze(par.get(i));
+                    break;
+                case "*":
+                    ans = ans * analyze(par.get(i));
+                    break;
+                case  "/":
+                    ans = ans / analyze(par.get(i));
+                    Math.round(ans);
+                    break;
             }
         }
 
@@ -154,9 +168,11 @@ public class OpAritmeticas {
         return ans;
     }
 
+    private String cleanString(String exp){
+        return exp.replace(" ", "");
+    }
+
     private int analyze(String value){
-
-
         try{
             return Integer.parseInt(clean(value));
         } catch (Exception e) {

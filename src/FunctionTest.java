@@ -5,23 +5,20 @@ import static org.junit.jupiter.api.Assertions.*;
 class FunctionTest {
 
     Control control = new Control();
-    Function f = new Function("(defun halo (algo) (cond ((equal 6 5) (+ t 5) (+ algo 6))))");
-    //Function f2 = new Function("(defun halo2 (algo) (cond ((equal 5 5) (+ (halo 10) 5) (+ 6 6))))");
+    Function f = new Function("(defun factorial (x) (cond ((equal x 1) 1) ((equal x 0) 1) (t (* (factorial (- x 1)) x ))))");
+    Function h = new Function("(defun fibo (x) (cond ((equal x 0) 0) ((equal x 1) 1) (t (+ (fibo (- x 1)) (fibo (- x 2))) )))");
 
     OpAritmeticas aritmetics = new OpAritmeticas();
 
     @org.junit.jupiter.api.Test
     void process() {
 
-        //LinkedHashMap<String, String> lh = new LinkedHashMap<>();
-        //lh.put("algo","");
-        //Function.funciones.put("halo", lh);
-        //Function.funcionesB.put("halo", "(cond ((equal 5 5) (+ t 5) (+ 6 6)))");
-        //System.out.println(f.devolverB("hola"));
-        // f.asignarP("hola","5 5 5");
-        Variables.variables.put("t", 2);
-        //System.out.println(f.Process("halo", "10"));
-        System.out.println(control.Process("(halo 5)"));
+        Control.using.put("c", "6");
+        //System.out.println(control.Process("(halo 5)"));
+        //System.out.println(f.Process("asd", "(halo 5) 6 (+ (cond ((equal x 4) 22) ((equal x 0) 1) (t (* (factorial (- x 1)) x ))) (+ (* c 3) x (+ 5 5 5)) 7) 12"));
+
+        System.out.println(control.Process("(fibo 21)"));
+
     }
 
 }
