@@ -1,12 +1,21 @@
 import java.util.*;
 
+/*
+ * Clase main del interprete Lisp
+ *
+ * @author Juan Carlos Bajan
+ * @author Jessica Pamela Ortiz
+ * @author Jose Mariano Reyes
+ *
+ * */
+
 public class OpAritmeticas {
 
     //private final Control control = new Control();
 
     private List<Integer> vals = new ArrayList<>();
 
-
+    //metodo encargado de realizar las operaciones aritmeticas
     public int Process(String expression) {
         ArrayList<String> exps = new ArrayList<>();
         //System.out.println(expression);

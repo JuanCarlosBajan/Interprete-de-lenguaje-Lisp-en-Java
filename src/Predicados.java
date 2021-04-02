@@ -2,8 +2,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/*
+ * Clase main del interprete Lisp
+ *
+ * @author Juan Carlos Bajan
+ * @author Jessica Pamela Ortiz
+ * @author Jose Mariano Reyes
+ *
+ * */
+
 public class Predicados {
 
+    //Metodo encargado de procesar los predicados
     public String Process(String expression){
         ArrayList<String> values = new ArrayList<>();
 

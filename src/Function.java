@@ -1,6 +1,15 @@
 import javax.swing.table.TableRowSorter;
 import java.util.*;
 
+/*
+ * Clase main del interprete Lisp
+ *
+ * @author Juan Carlos Bajan
+ * @author Jessica Pamela Ortiz
+ * @author Jose Mariano Reyes
+ *
+ * */
+
 public class Function {
 
     String name;
@@ -12,6 +21,7 @@ public class Function {
 
     boolean Ope = false;
 
+    //Metodo encargado de realizar la funcion
     public Function(String expression) {
 
         while (true) {

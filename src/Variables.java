@@ -2,11 +2,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+ * Clase main del interprete Lisp
+ *
+ * @author Juan Carlos Bajan
+ * @author Jessica Pamela Ortiz
+ * @author Jose Mariano Reyes
+ *
+ * */
+
 public class Variables {
     OpAritmeticas aritmetics = new OpAritmeticas();
+    //Todas las variables
     public static HashMap<String, Integer> variables = new HashMap<String , Integer>();
 
-
+    //Metodo encargado de crear las variables y almacenarlas
     public void Process(String expression) {
         ArrayList<String> values = new ArrayList<>();
 

@@ -2,8 +2,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
 
+/*
+ * Clase main del interprete Lisp
+ *
+ * @author Juan Carlos Bajan
+ * @author Jessica Pamela Ortiz
+ * @author Jose Mariano Reyes
+ *
+ * */
+
 public class Cond {
 
+    //metodo encargado de realizar las condicionales
     public String Process(String expression){
 
         ArrayList<String> tests = new ArrayList<>();

@@ -1,7 +1,18 @@
 import java.util.Scanner;
 
-public class Main {
+/*
+* Clase main del interprete Lisp
+*
+* @author Juan Carlos Bajan
+* @author Jessica Pamela Ortiz
+* @author Jose Mariano Reyes
+*
+* */
 
+public class Main {
+    /*
+    * @param args Parametro de la clase main
+    * */
     public static void main(String[] args){
 
         Control control = new Control();

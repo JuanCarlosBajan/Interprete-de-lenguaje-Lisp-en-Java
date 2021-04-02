@@ -5,11 +5,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
+/*
+ * Clase de control que se encargara que hacer con la expresion ingresada
+ *
+ * @author Juan Carlos Bajan
+ * @author Jessica Pamela Ortiz
+ * @author Jose Mariano Reyes
+ *
+ * */
+
 public class Control {
 
+    //Creacion de las variables que se usaran
     public static HashMap<String, String> vars = new HashMap<>();
     public static HashMap<String, String> using = new HashMap<>();
+
+    //Posibles Operadores aritmeticos
     private List<String> operators = Arrays.asList(new String[]{"+", "-", "*", "/"});
+
+    //Creacion de las clases de las posibles acciones del interprete
     OpAritmeticas operations = new OpAritmeticas();
     Predicados predicados = new Predicados();
     Variables variables = new Variables();
@@ -23,7 +37,6 @@ public class Control {
      * Con ellas, redirige el codigo a donde debe para llegar a una conclusion. Es importante
      * mencionar que este metodo solo se correra una vez.
      * */
-
 
     public String Process(String expression) {
 
@@ -132,6 +145,7 @@ public class Control {
 
     }
 
+    //funcion encargada de limpiar los espacios
     private String clean(String value){
         String ans = "";
 
@@ -159,6 +173,7 @@ public class Control {
 
     }
 
+    //funcion encargada de limpiar los parentesis
     private String cleanString(String expression){
         expression.replace("(", "");
         expression.replace(")","");
